@@ -1,2 +1,6 @@
 <h1>Home</h1>
 <a href="pages/results.html">Go to results</a>
+
+<%= form_tag("/pages/refreshCourseListing", method: "get") do %>
+    <%= submit_tag("Refresh Course Listing") %>
+<% end %>

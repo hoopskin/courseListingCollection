@@ -7,17 +7,20 @@ class PagesController < ApplicationController
     
   end
 
-  def results
-    #params = {'semester' => '20161Summer 2015                             ',
-    #      'subject' => 'IT  INFORMATION TECHNOLOGY',
-    #      'campus' => '1,2,3,4,5,6,7,9,A,B,C,I,L,M,N,P,Q,R,S,T,W,U,V,X,Y,Z',
-    #      'startTime' => '0600',
-    #      'endTime' => '2359',
-    #      'days' => 'ALL',
-    #      'All' => 'All Sections'}
-    #@x = Net::HTTP.post_form(URI.parse('http://www3.mnsu.edu/courses/selectform.asp'), params)
-    #File.open('out.htm', 'w') { |f| f.write @x.body }
+  def refreshCourseListing
+    params = {'semester' => '20161Summer 2015                             ',
+          'subject' => 'IT  INFORMATION TECHNOLOGY',
+          'campus' => '1,2,3,4,5,6,7,9,A,B,C,I,L,M,N,P,Q,R,S,T,W,U,V,X,Y,Z',
+          'startTime' => '0600',
+          'endTime' => '2359',
+          'days' => 'ALL',
+          'All' => 'All Sections'}
+    @x = Net::HTTP.post_form(URI.parse('http://www3.mnsu.edu/courses/selectform.asp'), params)
+    File.open('out.htm', 'w') { |f| f.write @x.body }
+    redirect_to :action => results
+  end
 
+  def results
     @page = Nokogiri::HTML(open('out.htm'))
     @page.traverse do |x|
       if x.text?
@@ -29,9 +32,10 @@ class PagesController < ApplicationController
       end
     end
 
+
     @page.css("b").each { |div| 
       if div.content.include? "Session"
-        div.name = "h1"; 
+        div.name = "h1"
         div.set_attribute("align", "center")
       end 
     }
@@ -60,6 +64,8 @@ class PagesController < ApplicationController
       @curRow = @curRow+1
     end
 
-    render :text => @page
+    puts @page.errors
+    render :text => @page.to_html, :content_type => 'text/html'
+    #render :results
   end
 end
