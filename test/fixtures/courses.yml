@@ -1,0 +1,51 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  college: 
+  number: 
+  title: 
+  credits: 
+  courseId: 
+  sect: 
+  gradeMeth: 
+  days: 
+  days2: 
+  time: 
+  time2: 
+  dates: 
+  dates2: 
+  instructor: 
+  instructor2: 
+  size: 
+  enrl: 
+  status: 
+  addlNotes: 
+  semester: 
+  session: 
+  prereqs: 
+  offered: MyString
+
+two:
+  college: 
+  number: 
+  title: 
+  credits: 
+  courseId: 
+  sect: 
+  gradeMeth: 
+  days: 
+  days2: 
+  time: 
+  time2: 
+  dates: 
+  dates2: 
+  instructor: 
+  instructor2: 
+  size: 
+  enrl: 
+  status: 
+  addlNotes: 
+  semester: 
+  session: 
+  prereqs: 
+  offered: MyString

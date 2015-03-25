@@ -1,0 +1,53 @@
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+<h1>Course Search Results</h1>
+<table class="table table-condensed table-bordered">
+  <% Course.all.each do |t| %>
+      <tr>
+        <td colspan="12">
+          <%= t.college.to_s+t.number.to_s+" - "+t.title.to_s %>
+          <br/>
+          <% if !t.prereqs.to_s.empty? %>
+              Prereq: <%= t.prereqs.to_s %>
+          <% end %>
+        </td>
+      </tr>
+      <tr>
+        <td width="7%">
+          <%= t.courseId %>
+        </td>
+        <td width="3%">
+          <%= t.sect %>
+        </td>
+        <td width="1%">
+          <%= t.gradeMeth %>
+        </td>
+        <td width="8%">
+          <%= t.days %>
+        </td>
+        <td width="14%">
+          <%= t.time %>
+        </td>
+        <td width="15%">
+          <%= t.dates %>
+        </td>
+        <td width="8%">
+          <%= t.bldg %>
+        </td>
+        <td width="19%">
+          <%= t.instructor %>
+        </td>
+        <td width="4%">
+          <%= t.size %>
+        </td>
+        <td width="4%">
+          <%= t.enrl %>
+        </td>
+        <td width="4%">
+          <%= t.status %>
+        </td>
+        <td width="7%">
+          <%= t.addlNotes %>
+        </td>
+      </tr>
+  <% end %>
+</table>

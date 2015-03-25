@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   get 'pages/home'
 
+  get 'pages/printResults'
+
   get 'pages/results'
 
   get 'pages/refreshCourseListing'
