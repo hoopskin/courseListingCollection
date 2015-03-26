@@ -32,6 +32,21 @@ class PagesController < ApplicationController
       @increment = 1
       #Check if it's a course header row (e.g. 'IT 100 - Title (X Cred)')
       if (@curRow.css("td").size == 1) && (@page.css('table')[1].css('tr')[@curRowIdx+1].css("td").size == 12)
+
+        @college = @curRow.css('td').css('font')[0].css('b')[0].content.to_s.strip!
+
+        @number = 0
+        
+        if @curRow.css('td').css('font')[0].css('b')[1].content.to_s.strip! == nil
+            @number = @curRow.css('td').css('font')[0].css('b')[1].content.to_s
+          else
+            @number = @curRow.css('td').css('font')[0].css('b')[1].content.to_s.strip!
+          end
+
+        @title = @curRow.css('td').css('font')[1].css('b')[0].content.to_s.strip!
+
+        #Credits (Can't use trim because nbsp is a character, this gets the digit)
+        @credits = @curRow.css('td').css('font')[1].css('b')[1].content.to_s[3]
         
         while (@curRowIdx+@increment < @rowSize) and (@page.css('table')[1].css('tr')[@curRowIdx+@increment].css("td").size == 12)
           #Collect Info
@@ -41,24 +56,20 @@ class PagesController < ApplicationController
           newCourse = Course.new
 
           #Course College
-          newCourse.college = @curRow.css('td').css('font')[0].css('b')[0].content.to_s.strip!
+          newCourse.college = @college
   
           #Course Number
-          if @curRow.css('td').css('font')[0].css('b')[1].content.to_s.strip! == nil
-            newCourse.number = @curRow.css('td').css('font')[0].css('b')[1].content.to_s
-          else
-            newCourse.number = @curRow.css('td').css('font')[0].css('b')[1].content.to_s.strip!
-          end
+          newCourse.number = @number
 
-          if newCourse.number == '550'
+          if newCourse.number == '320'
             puts 'hey there'
           end
   
           #Course Title
-          newCourse.title = @curRow.css('td').css('font')[1].css('b')[0].content.to_s.strip!
+          newCourse.title = @title
   
-          #Credits (Can't use trim because nbsp is a character, this gets the digit)
-          newCourse.credits = @curRow.css('td').css('font')[1].css('b')[1].content.to_s[3]
+          #Course Credits
+          newCourse.credits = @credits
   
           #Course ID
           newCourse.courseId = @dataRow.css('td')[0].content
@@ -117,12 +128,14 @@ class PagesController < ApplicationController
             newCourse.instructor2 = @dataRow2.css("td")[5].content.strip!
 
             @increment = @increment + 2
+            newCourse.save
           else
             @increment = @increment + 1
+            newCourse.save
           end
         end
 
-        newCourse.save
+        #newCourse.save
       end
 
       @curRowIdx = @curRowIdx + @increment
@@ -135,6 +148,9 @@ class PagesController < ApplicationController
 
     #For each course
     Course.all.each do |curCourse|
+      #Default Heat Color
+      curCourse.heatColor = "ForestGreen"
+
       csvFile.each do |row|
         #Go through each 0th cell and find the match
         if row[0].eql?(curCourse.college+curCourse.number)
@@ -144,12 +160,22 @@ class PagesController < ApplicationController
           #Get the Offered value
           curCourse.offered = row[2]
 
-          #Get the historical enrollment value
+          #Assuming that it is fall so we actually see all different heats
 
-          curCourse.save
+          if curCourse.offered == "Variable"
+            #FireBrick (Hottest) (Variable)
+            curCourse.heatColor = "FireBrick"
+          elsif curCourse.offered == "Fall"
+            #GoldenRod (Hot) (Just Fall)
+            curCourse.heatColor = "GoldenRod"
+          end
+
+          #Get the historical enrollment value
+          curCourse.histenrl = row[3]
           break
         end
       end
+      curCourse.save
     end
 
     #Prereqs?

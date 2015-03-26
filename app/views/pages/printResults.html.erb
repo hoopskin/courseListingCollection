@@ -1,14 +1,65 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
 <h1>Course Search Results</h1>
+<h4>By: Alex Sorenson</h4>
+<table>
+  <tr>
+    <th>Heat Index</th>
+  </tr>
+  <tr>
+    <td>
+      <span class="glyphicon glyphicon-fire" style="color:Firebrick"></span>
+    </td>
+    <td>
+     = Hottest
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <span class="glyphicon glyphicon-fire" style="color:GoldenRod"></span>
+    </td>
+    <td>
+     = Hot
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <span class="glyphicon glyphicon-fire" style="color:ForestGreen"></span>
+    </td>
+    <td>
+     = Normal
+    </td>
+  </tr>
+</table>
 <table class="table table-condensed table-bordered">
+  <tr> 
+    <th width="7%">Course ID</th>
+    <th width="3%">Sect</th>
+    <th width="1%">Grade Meth</th>
+    <th width="8%">Days</th>
+    <th width="14%">Time</th>
+    <th width="15%">Dates</th>
+    <th width="8%">Bldg/Room</th>
+    <th width="19%">Instructor</th>
+    <th width="4%">Size</th>
+    <th width="4%">Enrl</th>
+    <th width="4%">Status</th>
+    <th width="7%">Add'l Notes</th>
+  </tr>
+
   <% Course.all.each do |t| %>
       <tr>
         <td colspan="12">
-          <%= t.college.to_s+t.number.to_s+" - "+t.title.to_s %>
-          <br/>
-          <% if !t.prereqs.to_s.empty? %>
-              Prereq: <%= t.prereqs.to_s %>
-          <% end %>
+          <div class="col-xs-8">
+              <span class="glyphicon glyphicon-fire" style="color:<%=t.heatColor%>"></span>
+              <%= t.college.to_s+t.number.to_s+" - "+t.title.to_s %>
+              <% if !t.prereqs.to_s.empty? %>
+                  <br/>
+                  Prereq: <%= t.prereqs.to_s %>
+              <% end %>
+          </div>
+          <div class="col-xs-3 col-xs-offset-1">
+            Historical Enrollment: <%= t.histenrl %>
+          </div>
         </td>
       </tr>
       <tr>
@@ -31,7 +82,7 @@
           <%= t.dates %>
         </td>
         <td width="8%">
-          <%= t.bldg %>
+          <a href="http://www.mnsu.edu/registrar/building.html"target = _blank><%= t.bldg %></a>
         </td>
         <td width="19%">
           <%= t.instructor %>
@@ -49,5 +100,16 @@
           <%= t.addlNotes %>
         </td>
       </tr>
+      <% if !t.dates2.nil? %>
+        <tr>
+          <td colspan="3">&nbsp;</td>
+          <td width="8%"><%= t.days2 %></td>
+          <td width="16%"><%= t.time2 %></td>
+          <td width="17%"><%= t.dates2 %></td>
+          <td width="8%"><a href="http://www.mnsu.edu/registrar/building.html"target = _blank><%= t.bldg2 %></a></td>
+          <td width="19%"><%= t.instructor2 %></td>
+          <td colspan="4">&nbsp;</td>
+        </tr>
+      <% end %>
   <% end %>
 </table>
